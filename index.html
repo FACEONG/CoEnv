@@ -1,0 +1,451 @@
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoEnv: Driving Embodied Multi-Agent Collaboration via Compositional Environment</title>
+    <meta name="description" content="CoEnv: Driving Embodied Multi-Agent Collaboration via Compositional Environment">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all">
+    <meta content="en_EN" property="og:locale">
+    <meta content="website" property="og:type">
+    <meta content="CoEnv" property="og:title">
+    <meta content="Driving Embodied Multi-Agent Collaboration via Compositional Environment" property="og:description">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:description" content="CoEnv: Driving Embodied Multi-Agent Collaboration via Compositional Environment">
+
+    <link rel="stylesheet" type="text/css" media="all" href="assets/stylesheets/main_free.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="clarity/clarity.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/foundation.min.css">
+    <link href="assets/fontawesome-free-6.6.0-web/css/all.min.css" rel="stylesheet">
+    <script src="assets/scripts/navbar.js"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            "HTML-CSS": {
+              scale: 95,
+              fonts: ["Gyre-Pagella"],
+              imageFont: null,
+              undefinedFamily: "'Arial Unicode MS', cmbright"
+            },
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                processEscapes: true
+              }
+          });
+    </script>
+    <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        .center th, .center td { text-align: center; }
+        .table-wrapper { overflow-x: auto; }
+        .two-agent { background-color: #edf7ff; }
+        .three-agent { background-color: #f2fff9; }
+        .ablation { background-color: #fff7d9; }
+        .container.blog img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Title Page -->
+    <div class="container blog" id="first-content" style="background: linear-gradient(135deg, hsla(210, 60%, 88%, 1) 0%, hsla(160, 50%, 90%, 1) 50%, hsla(40, 70%, 92%, 1) 100%);">
+        <div class="blog-title no-cover">
+            <div class="blog-intro">
+                <div>
+                    <h1 class="title">CoEnv: Driving Embodied Multi&#8209;Agent Collaboration via Compositional Environment</h1>
+                    <div class="info">
+                        <p>Under Review</p>
+                    </div>
+                    <p class="author">
+                        Li Kang<sup>1,2&#9733;</sup>, Yutao Fan<sup>2,3&#9733;</sup>, Rui Li<sup>2,3&#9733;</sup>, Heng Zhou<sup>2,4&#9733;</sup>,<br>
+                        Yiran Qin<sup>5</sup>, Zhemeng Zhang<sup>1</sup>, Songtao Huang<sup>6</sup>, Xiufeng Song<sup>1</sup>, Zaibin Zhang<sup>7</sup>,<br>
+                        Bruno N.Y. Chen<sup>8</sup>, Zhenfei Yin<sup>9</sup>, Dongzhan Zhou<sup>2&dagger;</sup>, Wangmeng Zuo<sup>3&dagger;</sup>, Lei Bai<sup>2&dagger;</sup>
+                    </p>
+                    <p class="author" style="padding-top: 0px;">
+                        <sup>1</sup>Shanghai Jiao Tong University &nbsp;
+                        <sup>2</sup>Shanghai AI Laboratory &nbsp;
+                        <sup>3</sup>Harbin Institute of Technology &nbsp;
+                        <sup>4</sup>USTC<br>
+                        <sup>5</sup>CUHK-Shenzhen &nbsp;
+                        <sup>6</sup>Fudan University &nbsp;
+                        <sup>7</sup>Dalian University of Technology<br>
+                        <sup>8</sup>Carnegie Mellon University &nbsp;
+                        <sup>9</sup>University of Oxford<br>
+                        <sup>&#9733;</sup>Equal contribution &nbsp; <sup>&dagger;</sup>Corresponding author
+                    </p>
+                    <p class="abstract" style="text-align: justify;">
+                        Multi-agent embodied systems hold promise for complex collaborative manipulation, yet face critical challenges in spatial coordination, temporal reasoning, and shared workspace awareness.
+                        Inspired by human collaboration where cognitive planning occurs separately from physical execution, we introduce the concept of <em>compositional environment</em>&mdash;a synergistic integration of real-world and simulation components that enables multiple robotic agents to perceive intentions and operate within a unified decision-making space.
+                        Building on this concept, we present <b>CoEnv</b>, a framework that leverages simulation for safe strategy exploration while ensuring reliable real-world deployment.
+                        CoEnv operates through three stages: real-to-sim scene reconstruction that digitizes physical workspaces, VLM-driven action synthesis supporting both real-time planning with high-level interfaces and iterative planning with code-based trajectory generation, and validated sim-to-real transfer with collision detection for safe deployment.
+                        Extensive experiments on challenging multi-arm manipulation benchmarks demonstrate CoEnv's effectiveness in achieving high task success rates and execution efficiency, establishing a new paradigm for multi-agent embodied AI.
+                    </p>
+                    <br>
+                    <!-- Buttons -->
+                    <div class="info">
+                        <div>
+                            <a href="#" class="button icon" style="background-color: rgba(255, 255, 255, 0.2)"> Paper <i class="fa-solid fa-book-open"></i></a> &nbsp;&nbsp;
+                            <a href="#" class="button icon" style="background-color: rgba(255, 255, 255, 0.2)">Code <i class="fa-solid fa-code"></i></a> &nbsp;&nbsp;
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container blog main first" id="blog-main" style="text-align: justify;">
+        <h1>Introduction</h1>
+        <p class='text'>
+            Recently, <a href="https://claude.ai/code" target="_blank"><b>Claude Code</b></a>&mdash;Anthropic's agentic coding tool&mdash;has taken the AI community by storm with its remarkable ability to autonomously reason, write, and execute complex programs. While the world marvels at its software engineering prowess, we ask a different question: <em>what happens when we bring this powerful code agent into the physical world?</em>
+        </p>
+    </div>
+    <div class="container blog large" style="padding-top: 0px; padding-bottom: 0px;">
+        <img src="images/code_robotic.png" alt="Claude Code meets Robotics" style="max-width: 100%; height: auto;">
+    </div>
+    <div class="container blog main" style="text-align: justify;">
+        <p class='text'>
+            In CoEnv, we leverage Claude Code as a <b>code-based trajectory generator for multi-robot collaboration</b>. Given a task goal and simulation environment, Claude Code autonomously writes complete programs that coordinate multiple robotic arms&mdash;planning grasps, handovers, and collision-free motions&mdash;all in a single pass. The generated code is executed in simulation, verified, and iteratively refined through natural language feedback, before being transferred to real robots.
+        </p>
+        <p class='text'>
+            Foundation models and vision-language-action architectures have unlocked unprecedented capabilities in embodied AI, but complex long-horizon manipulation scenarios increasingly demand <b>multi-agent coordination</b>. Unlike single-agent systems, multi-agent collaboration introduces substantial complexity: agents must avoid spatial conflicts, reason about temporal dependencies, and maintain awareness of shared workspace dynamics.
+        </p>
+        <blockquote class="blockquote">
+            How can multiple robotic agents collaborate safely and effectively in shared physical workspaces?
+        </blockquote>
+        <p class='text'>
+            Inspired by human collaboration&mdash;where cognitive planning occurs separately from physical execution&mdash;we propose the concept of <b>compositional environment</b>: a synergistic integration of real-world and simulation components that creates a unified decision-making space for multi-agent embodied collaboration. The physical world executes high-fidelity actions, while simulation enables safe, cost-effective strategy exploration. <b>CoEnv</b> bridges both through pose alignment, action mapping, and collision verification.
+        </p>
+    </div>
+    <div class="container blog large gray-linear">
+        <img src="images/motivation_v4.png" alt="Motivation" class="img-popup" onclick="openPopup(this.src)" style="max-width: 88%; margin: 0 auto; display: block;">
+        <p class="caption" style="text-align: justify;">
+            <b>Motivation of CoEnv.</b> Physical-world execution offers high fidelity but risks costly collisions, while the digital world enables cost-effective and safe testing. CoEnv composes both worlds through pose and action alignment, forming a <em>compositional environment</em> that supports real-to-sim reconstruction, simulation-conditioned action synthesis, and safe real-world deployment.
+        </p>
+    </div>
+
+    <style>
+    .img-popup {
+        cursor: zoom-in;
+        transition: 0.3s;
+        max-width: 100%;
+    }
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0,0,0,0.8);
+        justify-content: center;
+        align-items: center;
+    }
+    .popup-overlay img {
+        max-width: 90vw;
+        max-height: 90vh;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        box-shadow: 0 0 20px white;
+        border-radius: 10px;
+    }
+    </style>
+
+    <!-- Popup overlay -->
+    <div id="popup" class="popup-overlay" onclick="closePopup()">
+        <img id="popup-img" src="" alt="Zoomed">
+    </div>
+
+    <script>
+    function openPopup(src) {
+        document.getElementById("popup-img").src = src;
+        document.getElementById("popup").style.display = "flex";
+    }
+    function closePopup() {
+        document.getElementById("popup").style.display = "none";
+    }
+    </script>
+
+
+    <div class="container blog main" id="blog-main" style="text-align: justify;">
+        <h1>Method</h1>
+        <p class='text'>
+            CoEnv operates through a three-stage pipeline that transforms real-world observations into coordinated multi-agent actions:
+        </p>
+        <ol>
+            <li>
+                <p class='text'>
+                    <b>Real-to-Sim Scene Reconstruction:</b> Multi-view RGBD observations are converted into a simulator-ready scene. We use Grounded SAM2 for object detection, FoundationPose for 6-DoF pose estimation with multi-view fusion, and ManiSkill (built on SAPIEN) as the simulation backend with iterative camera calibration refinement.
+                </p>
+            </li>
+            <li>
+                <p class='text'>
+                    <b>Simulation-Conditioned Action Synthesis:</b> A VLM-based planner decomposes task goals into hierarchical sub-goals and execution plans. Actions are synthesized in two complementary modes: <em>Interactive mode</em> uses closed-loop VLM feedback with adaptive camera control and checkpoint verification for real-time re-planning; <em>Iterative mode</em> leverages a code agent to generate complete multi-agent trajectories in a single program, refined through simulation feedback.
+                </p>
+            </li>
+            <li>
+                <p class='text'>
+                    <b>Sim-to-Real Transfer:</b> Validated trajectories are transferred to real robots via trajectory interpolation with collision volume verification, ensuring collision-free multi-agent execution.
+                </p>
+            </li>
+        </ol>
+    </div>
+    <div class="container blog large gray-linear">
+        <img src="images/pipeline_v7.png" alt="Pipeline" class="img-popup" onclick="openPopup(this.src)">
+        <p class="caption" style="text-align: justify;">
+            <b>Overview of CoEnv.</b> The framework consists of three stages: (1) Real-to-Sim Scene Reconstruction using 3D asset generation, multi-view localization, and iterative camera calibration; (2) Simulation-Conditioned Action Synthesis with hierarchical task planning and two complementary execution modes (interactive and iterative); (3) Sim-to-Real Transfer with trajectory interpolation and collision volume verification.
+        </p>
+    </div>
+
+
+    <div class="container blog main" style="text-align: justify;">
+        <h1>Tasks</h1>
+        <p class="text">
+            We evaluate CoEnv on five challenging multi-arm manipulation tasks with increasing coordination complexity, using two-agent (Franka Research 3 &times; 2) and three-agent (Franka Research 3 + AgileX Piper dual-arm) configurations.
+        </p>
+    </div>
+    <div class="container blog large gray-linear">
+        <img src="images/tasks.png" alt="Tasks" class="img-popup" onclick="openPopup(this.src)">
+        <p class="caption" style="text-align: justify;">
+            <b>Task demonstrations.</b> Five multi-agent manipulation tasks with keyframes from successful real-world executions. Two-agent tasks: Cube Stacking, Ball Pickup, and Transfer Cylinder. Three-agent tasks: Place Cucumber and Brush Box.
+        </p>
+    </div>
+
+
+    <div class="container blog main">
+        <h1>Results</h1>
+        <p class="text" style="text-align: justify;">
+            CoEnv achieves an <b>overall 49% success rate</b> across five challenging multi-agent manipulation tasks. The two execution modes exhibit complementary strengths: iterative mode excels at tasks requiring precise trajectory control (e.g., Cube Stacking: 9/10), while interactive mode dominates in complex multi-stage coordination (e.g., Brush Box: 7/10).
+        </p>
+    </div>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        thead {
+            background-color: #fffbef;
+        }
+        .note-row td {
+            text-align: center;
+            background-color: #ffffff;
+            border: none;
+        }
+    </style>
+    <div class="container blog extra-large">
+        <table>
+            <thead class="center">
+                <tr class="note-row">
+                    <td colspan="5">
+                        <b>S<sub>i</sub></b>: Subtask success rate (x/10). &nbsp;&nbsp;&nbsp;
+                        <b>SR</b>: Task success rate (x/10). &nbsp;&nbsp;&nbsp;
+                        <b>Overall</b>: Average across both modes.
+                    </td>
+                </tr>
+                <tr>
+                    <th>Task</th>
+                    <th>Mode</th>
+                    <th>Subtask Milestones</th>
+                    <th>SR (x/10)</th>
+                    <th>Overall (%)</th>
+                </tr>
+            </thead>
+            <tbody class="center">
+                <!-- Cube Stacking -->
+                <tr class="two-agent">
+                    <td rowspan="2"><b>Cube Stacking</b></td>
+                    <td>Interactive</td>
+                    <td>S1: 7/10, S2: 6/10</td>
+                    <td>6/10</td>
+                    <td rowspan="2"><b>75%</b></td>
+                </tr>
+                <tr class="two-agent">
+                    <td>Iterative</td>
+                    <td>S1: 10/10, S2: 9/10</td>
+                    <td>9/10</td>
+                </tr>
+                <!-- Ball Pickup -->
+                <tr class="two-agent">
+                    <td rowspan="2"><b>Ball Pickup</b></td>
+                    <td>Interactive</td>
+                    <td>S1: 9/10, S2: 4/10</td>
+                    <td>4/10</td>
+                    <td rowspan="2"><b>50%</b></td>
+                </tr>
+                <tr class="two-agent">
+                    <td>Iterative</td>
+                    <td>S1: 6/10, S2: 6/10</td>
+                    <td>6/10</td>
+                </tr>
+                <!-- Transfer Cylinder -->
+                <tr class="two-agent">
+                    <td rowspan="2"><b>Transfer Cylinder</b></td>
+                    <td>Interactive</td>
+                    <td>S1: 9/10, S2: 4/10, S3: 4/10</td>
+                    <td>4/10</td>
+                    <td rowspan="2"><b>25%</b></td>
+                </tr>
+                <tr class="two-agent">
+                    <td>Iterative</td>
+                    <td>S1: 6/10, S2: 2/10, S3: 1/10</td>
+                    <td>1/10</td>
+                </tr>
+                <!-- Place Cucumber -->
+                <tr class="three-agent">
+                    <td rowspan="2"><b>Place Cucumber</b></td>
+                    <td>Interactive</td>
+                    <td>S1: 9/10, S2: 7/10, S3: 4/10</td>
+                    <td>4/10</td>
+                    <td rowspan="2"><b>35%</b></td>
+                </tr>
+                <tr class="three-agent">
+                    <td>Iterative</td>
+                    <td>S1: 8/10, S2: 8/10, S3: 3/10</td>
+                    <td>3/10</td>
+                </tr>
+                <!-- Brush Box -->
+                <tr class="three-agent">
+                    <td rowspan="2"><b>Brush Box</b></td>
+                    <td>Interactive</td>
+                    <td>S1: 10/10, S2: 9/10, S3: 7/10</td>
+                    <td>7/10</td>
+                    <td rowspan="2"><b>60%</b></td>
+                </tr>
+                <tr class="three-agent">
+                    <td>Iterative</td>
+                    <td>S1: 8/10, S2: 8/10, S3: 5/10</td>
+                    <td>5/10</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="container blog large gray-linear">
+        <img src="images/sim_real.png" alt="Sim-to-Real" class="img-popup" onclick="openPopup(this.src)">
+        <p class="caption" style="text-align: justify;">
+            <b>Simulation vs. Real-world execution.</b> Side-by-side comparison demonstrating high visual correspondence between simulated planning and real-world execution across multiple tasks, validating the effectiveness of CoEnv's compositional environment approach.
+        </p>
+    </div>
+
+
+    <div class="container blog main">
+        <h1>Ablation Study</h1>
+        <p class="text" style="text-align: justify;">
+            We ablate two key mechanisms in CoEnv's interactive mode: <b>Adaptive Camera Control</b> and <b>Checkpoint Verification</b>. Both are indispensable&mdash;removing adaptive camera reduces average success by 40%, while removing checkpoints causes a 60% drop due to cascading error propagation.
+        </p>
+    </div>
+    <div class="container blog large">
+        <table>
+            <thead class="center">
+                <tr>
+                    <th>Variant</th>
+                    <th>Cube Stacking</th>
+                    <th>Ball Pickup</th>
+                    <th>Transfer Cyl.</th>
+                    <th>Place Cuc.</th>
+                    <th>Brush Box</th>
+                    <th>Average</th>
+                </tr>
+            </thead>
+            <tbody class="center">
+                <tr class="ablation">
+                    <td><b>Full CoEnv</b></td>
+                    <td>6/10</td><td>4/10</td><td>4/10</td><td>4/10</td><td>7/10</td><td><b>50%</b></td>
+                </tr>
+                <tr class="ablation">
+                    <td>w/o Adaptive Camera</td>
+                    <td>5/10</td><td>6/10</td><td>0/10</td><td>4/10</td><td>0/10</td><td>30%</td>
+                </tr>
+                <tr class="ablation">
+                    <td>w/o Checkpoint Verification</td>
+                    <td>4/10</td><td>2/10</td><td>0/10</td><td>4/10</td><td>0/10</td><td>20%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="container blog main" style="text-align: justify;">
+        <h1>Scalable Data Collection</h1>
+        <p class="text">
+            Beyond task execution, CoEnv reveals a practical pathway toward <b>scalable multi-agent data generation</b>. The iterative mode produces substantially more episodes per session (up to 11.7&times; better throughput), as the code agent generates complete trajectories in a single program with lower per-episode token cost. Environment resets account for only ~10&ndash;32% of total token consumption, indicating the vast majority of the budget is devoted to productive reasoning.
+        </p>
+    </div>
+    <div class="container blog large">
+        <table>
+            <thead class="center">
+                <tr>
+                    <th>Task</th>
+                    <th>Interactive</th>
+                    <th>Iterative</th>
+                    <th>Reset (%)</th>
+                </tr>
+            </thead>
+            <tbody class="center">
+                <tr class="two-agent">
+                    <td><b>Cube Stacking</b></td>
+                    <td>1.5</td>
+                    <td><b>17.5</b></td>
+                    <td>31.57</td>
+                </tr>
+                <tr class="three-agent">
+                    <td><b>Brush Box</b></td>
+                    <td>2.5</td>
+                    <td><b>9.5</b></td>
+                    <td>10.54</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="container blog large gray-linear">
+        <img src="images/train_v2.png" alt="Data Collection" class="img-popup" onclick="openPopup(this.src)" style="max-width: 85%; margin: 0 auto; display: block;">
+        <p class="caption" style="text-align: justify;">
+            <b>Scalable data collection pipeline.</b> CoEnv first synthesizes and validates manipulation strategies in simulation, then transfers them to real robots for physical execution, collecting real-world multi-agent trajectory data that can be used to train generalist policies, providing an alternative to manual teleoperation.
+        </p>
+    </div>
+
+
+    <div class="container blog main">
+        <h1>Citation</h1>
+        <p class="text">
+            If you find this project useful, welcome to cite us.
+        </p>
+<pre><code class="plaintext">@article{kang2026coenv,
+    title={CoEnv: Driving Embodied Multi-Agent Collaboration via Compositional Environment},
+    author={Li Kang and Yutao Fan and Rui Li and Heng Zhou and Yiran Qin and Zhemeng Zhang and Songtao Huang and Xiufeng Song and Zaibin Zhang and Bruno N.Y. Chen and Zhenfei Yin and Dongzhan Zhou and Wangmeng Zuo and Lei Bai},
+    journal={arXiv preprint arXiv:xxxx.xxxxx},
+    year={2026}
+}</code></pre>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>
+                This website is built on the <a href="https://shikun.io/projects/clarity">Clarity Template</a>, designed by <a href="https://shikun.io/">Shikun Liu</a>.
+            </p>
+        </div>
+    </footer>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="clarity/clarity.js"></script>
+    <script src="assets/scripts/main.js"></script>
+    </html>
+</body>
