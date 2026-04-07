@@ -104,7 +104,7 @@
     <div class="container blog main first" id="blog-main" style="text-align: justify;">
         <h1>Introduction</h1>
         <p class='text'>
-            Recently, <a href="https://claude.ai/code" target="_blank"><b>Claude Code</b></a>&mdash;Anthropic's agentic coding tool&mdash;has taken the AI community by storm with its remarkable ability to autonomously reason, write, and execute complex programs. While the world marvels at its software engineering prowess, we ask a different question: <em>what happens when we bring this powerful code agent into the physical world?</em>
+            <a href="https://claude.ai/code" target="_blank"><b>Claude Code</b></a> has recently emerged as one of the most capable agentic coding tools, demonstrating strong abilities in autonomous reasoning and complex program synthesis. A natural question arises: <em>can such a code agent go beyond the digital world and drive coordination among physical robots?</em>
         </p>
     </div>
     <div class="container blog large" style="padding-top: 0px; padding-bottom: 0px;">
@@ -112,16 +112,13 @@
     </div>
     <div class="container blog main" style="text-align: justify;">
         <p class='text'>
-            In CoEnv, we leverage Claude Code as a <b>code-based trajectory generator for multi-robot collaboration</b>. Given a task goal and simulation environment, Claude Code autonomously writes complete programs that coordinate multiple robotic arms&mdash;planning grasps, handovers, and collision-free motions&mdash;all in a single pass. The generated code is executed in simulation, verified, and iteratively refined through natural language feedback, before being transferred to real robots.
+            In <b>CoEnv</b>, we explore this possibility. Beyond generating trajectory code, Claude Code <b>observes, thinks, and adapts</b> within simulation&mdash;adjusting camera viewpoints to see through occlusions, evaluating outcomes, and refining plans iteratively, just as a human would walk around a workspace for a better view. This closed-loop reasoning enables robust multi-arm coordination before any physical execution.
         </p>
         <p class='text'>
-            Foundation models and vision-language-action architectures have unlocked unprecedented capabilities in embodied AI, but complex long-horizon manipulation scenarios increasingly demand <b>multi-agent coordination</b>. Unlike single-agent systems, multi-agent collaboration introduces substantial complexity: agents must avoid spatial conflicts, reason about temporal dependencies, and maintain awareness of shared workspace dynamics.
+            As embodied AI scales toward multi-agent scenarios, a key challenge emerges: how do we get multiple robots to collaborate safely in a shared workspace&mdash;avoiding collisions, reasoning about each other's actions, and staying coordinated over long horizons?
         </p>
-        <blockquote class="blockquote">
-            How can multiple robotic agents collaborate safely and effectively in shared physical workspaces?
-        </blockquote>
         <p class='text'>
-            Inspired by human collaboration&mdash;where cognitive planning occurs separately from physical execution&mdash;we propose the concept of <b>compositional environment</b>: a synergistic integration of real-world and simulation components that creates a unified decision-making space for multi-agent embodied collaboration. The physical world executes high-fidelity actions, while simulation enables safe, cost-effective strategy exploration. <b>CoEnv</b> bridges both through pose alignment, action mapping, and collision verification.
+            Our answer is <b>Compositional Environment</b>&mdash;inspired by how humans mentally rehearse before acting. CoEnv fuses a real-world workspace with its simulation twin into a unified decision-making space: robots think and plan in simulation, then act in the physical world. This simple idea turns out to be surprisingly effective for multi-agent coordination.
         </p>
     </div>
     <div class="container blog large gray-linear">
@@ -226,6 +223,13 @@
         <p class="text" style="text-align: justify;">
             CoEnv achieves an <b>overall 49% success rate</b> across five challenging multi-agent manipulation tasks. The two execution modes exhibit complementary strengths: iterative mode excels at tasks requiring precise trajectory control (e.g., Cube Stacking: 9/10), while interactive mode dominates in complex multi-stage coordination (e.g., Brush Box: 7/10).
         </p>
+    </div>
+    <div class="container blog large" style="text-align: center;">
+        <video style="max-width: 60%; border-radius: 8px;" controls muted loop playsinline>
+            <source src="videos/demo.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <p class="caption">Autonomous multi-agent manipulation demo (4&times; speed).</p>
     </div>
     <style>
         table {
