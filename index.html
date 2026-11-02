@@ -1,455 +1,310 @@
-<html lang="en-GB">
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoEnv: Driving Embodied Multi-Agent Collaboration via Compositional Environment</title>
-    <meta name="description" content="CoEnv: Driving Embodied Multi-Agent Collaboration via Compositional Environment">
-    <meta name="referrer" content="no-referrer-when-downgrade">
-    <meta name="robots" content="all">
-    <meta content="en_EN" property="og:locale">
-    <meta content="website" property="og:type">
-    <meta content="CoEnv" property="og:title">
-    <meta content="Driving Embodied Multi-Agent Collaboration via Compositional Environment" property="og:description">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:description" content="CoEnv: Driving Embodied Multi-Agent Collaboration via Compositional Environment">
-
-    <link rel="stylesheet" type="text/css" media="all" href="assets/stylesheets/main_free.css" />
-    <link rel="stylesheet" type="text/css" media="all" href="clarity/clarity.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/foundation.min.css">
-    <link href="assets/fontawesome-free-6.6.0-web/css/all.min.css" rel="stylesheet">
-    <script src="assets/scripts/navbar.js"></script>
-    <script type="text/x-mathjax-config">
-        MathJax.Hub.Config({
-            "HTML-CSS": {
-              scale: 95,
-              fonts: ["Gyre-Pagella"],
-              imageFont: null,
-              undefinedFamily: "'Arial Unicode MS', cmbright"
-            },
-            tex2jax: {
-                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-                processEscapes: true
-              }
-          });
-    </script>
-    <script type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-    </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        .center th, .center td { text-align: center; }
-        .table-wrapper { overflow-x: auto; }
-        .two-agent { background-color: #edf7ff; }
-        .three-agent { background-color: #f2fff9; }
-        .ablation { background-color: #fff7d9; }
-        .container.blog img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoEnv: Code-Driven Exploration in Real-to-Sim Digital Twins</title>
+<meta name="description" content="A coding agent writes, runs, and debugs multi-arm robot programs in a digital twin of its own workspace. Verified programs run on the real robots, and their rollouts train visuomotor policies.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CoEnv: Code-Driven Exploration in Real-to-Sim Digital Twins for Multi-Arm Manipulation">
+<meta property="og:description" content="A coding agent writes, runs, and debugs multi-arm robot programs in a digital twin of its own workspace.">
+<meta property="og:image" content="https://faceong.github.io/CoEnv/images/fig1_paradigms.webp">
+<meta property="og:url" content="https://faceong.github.io/CoEnv/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Figtree:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 </head>
+<body id="top">
 
-<body>
-    <!-- Title Page -->
-    <div class="container blog" id="first-content" style="background: linear-gradient(135deg, hsla(210, 60%, 88%, 1) 0%, hsla(160, 50%, 90%, 1) 50%, hsla(40, 70%, 92%, 1) 100%);">
-        <div class="blog-title no-cover">
-            <div class="blog-intro">
-                <div>
-                    <h1 class="title">CoEnv: Driving Embodied Multi&#8209;Agent Collaboration via Compositional Environment</h1>
-                    <div class="info">
-                        <p>Under Review</p>
-                    </div>
-                    <p class="author">
-                        Li Kang<sup>1,2&#9733;</sup>, Yutao Fan<sup>2,3&#9733;</sup>, Rui Li<sup>2,3&#9733;</sup>, Heng Zhou<sup>2,4&#9733;</sup>,<br>
-                        Yiran Qin<sup>5</sup>, Zhemeng Zhang<sup>1</sup>, Songtao Huang<sup>6</sup>, Xiufeng Song<sup>1</sup>, Zaibin Zhang<sup>7</sup>,<br>
-                        Bruno N.Y. Chen<sup>8</sup>, Zhenfei Yin<sup>9</sup>, Dongzhan Zhou<sup>2&dagger;</sup>, Wangmeng Zuo<sup>3&dagger;</sup>, Lei Bai<sup>2&dagger;</sup>
-                    </p>
-                    <p class="author" style="padding-top: 0px;">
-                        <sup>1</sup>Shanghai Jiao Tong University &nbsp;
-                        <sup>2</sup>Shanghai AI Laboratory &nbsp;
-                        <sup>3</sup>Harbin Institute of Technology &nbsp;
-                        <sup>4</sup>USTC<br>
-                        <sup>5</sup>CUHK-Shenzhen &nbsp;
-                        <sup>6</sup>Fudan University &nbsp;
-                        <sup>7</sup>Dalian University of Technology<br>
-                        <sup>8</sup>Carnegie Mellon University &nbsp;
-                        <sup>9</sup>University of Oxford<br>
-                        <sup>&#9733;</sup>Equal contribution &nbsp; <sup>&dagger;</sup>Corresponding author
-                    </p>
-                    <p class="abstract" style="text-align: justify;">
-                        Multi-agent embodied systems hold promise for complex collaborative manipulation, yet face critical challenges in spatial coordination, temporal reasoning, and shared workspace awareness.
-                        Inspired by human collaboration where cognitive planning occurs separately from physical execution, we introduce the concept of <em>compositional environment</em>&mdash;a synergistic integration of real-world and simulation components that enables multiple robotic agents to perceive intentions and operate within a unified decision-making space.
-                        Building on this concept, we present <b>CoEnv</b>, a framework that leverages simulation for safe strategy exploration while ensuring reliable real-world deployment.
-                        CoEnv operates through three stages: real-to-sim scene reconstruction that digitizes physical workspaces, VLM-driven action synthesis supporting both real-time planning with high-level interfaces and iterative planning with code-based trajectory generation, and validated sim-to-real transfer with collision detection for safe deployment.
-                        Extensive experiments on challenging multi-arm manipulation benchmarks demonstrate CoEnv's effectiveness in achieving high task success rates and execution efficiency, establishing a new paradigm for multi-agent embodied AI.
-                    </p>
-                    <br>
-                    <!-- Buttons -->
-                    <div class="info">
-                        <div>
-                            <a href="https://arxiv.org/abs/2604.05484" class="button icon" style="background-color: rgba(255, 255, 255, 0.2)"> Paper <i class="fa-solid fa-book-open"></i></a> &nbsp;&nbsp;
-                            <a href="https://github.com/MARS-EAI/CoEnv" class="button icon" style="background-color: rgba(255, 255, 255, 0.2)">Code <i class="fa-solid fa-code"></i></a> &nbsp;&nbsp;
-                        </div>
-                    </div>
-                </div>
-            </div>
+<header class="site">
+  <div class="site-inner">
+    <a class="site-name" href="#top">CoEnv</a>
+    <nav class="site-links" aria-label="Paper links">
+      <a href="https://arxiv.org/abs/2604.05484">Paper</a>
+      <a href="https://github.com/MARS-EAI/CoEnv">Code</a>
+      <a href="#citation">Cite</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<article>
+
+  <header class="head">
+    <p class="kicker"><span class="kicker-cat">Research</span><time datetime="2026-04-07">April 7, 2026</time></p>
+    <h1>CoEnv: <span class="nw">Code-Driven</span> Exploration in <span class="nw">Real-to-Sim</span> Digital Twins for <span class="nw">Multi-Arm</span> Manipulation</h1>
+
+    <p class="authors">
+      Li Kang<sup>1,2*</sup>,
+      Yutao Fan<sup>2,3*</sup>,
+      Rui Li<sup>2,3*</sup>,
+      Heng Zhou<sup>2,4*</sup>,
+      Yiran Qin<sup>5</sup>,
+      Zhemeng Zhang<sup>1</sup>,
+      Songtao Huang<sup>2,6</sup>,
+      Xiufeng Song<sup>1</sup>,
+      Zaibin Zhang<sup>7</sup>,
+      Bruno N.Y. Chen<sup>8</sup>,
+      Zhenfei Yin<sup>9</sup>,
+      Dongzhan Zhou<sup>2&dagger;</sup>,
+      Wangmeng Zuo<sup>3&dagger;</sup>,
+      Lei Bai<sup>2&dagger;</sup>
+    </p>
+    <p class="affils">
+      <span><sup>1</sup>Shanghai Jiao Tong University</span>
+      <span><sup>2</sup>Shanghai AI Laboratory</span>
+      <span><sup>3</sup>Harbin Institute of Technology</span>
+      <span><sup>4</sup>University of Science and Technology of China</span>
+      <span><sup>5</sup>CUHK-Shenzhen</span>
+      <span><sup>6</sup>Fudan University</span>
+      <span><sup>7</sup>Dalian University of Technology</span>
+      <span><sup>8</sup>Carnegie Mellon University</span>
+      <span><sup>9</sup>University of Oxford</span>
+    </p>
+    <p class="notes"><sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>&dagger;</sup>Corresponding authors</p>
+
+    <p class="actions">
+      <a class="btn" href="https://arxiv.org/abs/2604.05484">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.5h5.2L12.5 4.8V14a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5V2a.5.5 0 0 1 .5-.5Z M9 1.5V5h3.5 M5.8 8h4.4 M5.8 10.4h4.4"/></svg>
+        arXiv
+      </a>
+      <a class="btn" href="https://arxiv.org/pdf/2604.05484">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8.5 M4.8 7.5 8 10.7l3.2-3.2 M3 13.5h10"/></svg>
+        PDF
+      </a>
+      <a class="btn" href="https://github.com/MARS-EAI/CoEnv">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4.5 2 8l3.5 3.5 M10.5 4.5 14 8l-3.5 3.5"/></svg>
+        Code
+      </a>
+      <a class="btn" href="#citation">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 4.5h10 M3 8h10 M3 11.5h6"/></svg>
+        BibTeX
+      </a>
+    </p>
+  </header>
+
+  <figure class="hero">
+    <video id="demo" src="videos/three_arm_tasks.mp4" poster="images/three_arm_poster.webp" muted loop playsinline autoplay preload="metadata" aria-label="Real-robot runs of Place Cucumber and Brush Box"></video>
+    <figcaption>Autonomous real-robot runs of the two three-arm tasks, Place Cucumber and Brush Box, planned and verified in the digital twin before execution. A Franka works next to an AgileX Piper dual-arm. Shown at 4&times; speed.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <p class="lead">We rebuild a real multi-arm workcell as a physics simulation and let a coding agent write, run, and debug complete robot programs inside it. A program that passes verification in the twin is executed on the real robots, and every successful run is a real demonstration that can be used to train a visuomotor policy.</p>
+
+    <p>Collecting demonstrations for multi-arm manipulation is slow. A single teleoperated episode can need several operators working in sync. Simulation is the usual remedy: multiply a few human demonstrations into a large simulated dataset, co-train on simulated and real data, or learn inside a reconstructed scene. In each case the simulator produces the training data, so the policy still has to cross a sim-to-real gap, and the behavior still starts from a human demonstration or a hand-written reward.</p>
+
+    <p>Coding agents can now write, debug, and refine entire robot programs. What they lack is a place to practice. On real hardware every retry needs a manual reset and risks collisions between arms that share the workspace. Generic simulation benchmarks are safe, but their geometry, assets, and camera views do not match the workcell where the robot actually has to work, so programs debugged there do not transfer.</p>
+
+    <p>CoEnv gives the agent an executable digital twin of its own deployment workspace. The agent uses the twin to find a program, not to generate training images. Once a program is verified, it runs on the real robot, and the data recorded there is real.</p>
+  </div>
+
+  <figure class="wide">
+    <img src="images/fig1_paradigms.webp" width="2200" height="730" loading="lazy" alt="Left: the real workcell and its digital twin. Right: three ways to use the twin, (a) real-sim co-training, (b) sim RL, (c) code-driven exploration.">
+    <figcaption><span class="fig-no">Figure 1.</span> Three ways to use a digital twin. Co-training (a) mixes simulated trajectories with a few real ones, and sim RL (b) trains a policy against simulated rollouts and a reward. Both put the simulator upstream of the data. Code-driven exploration (c) puts it upstream of the program: given only a task description, the code agent writes a multi-arm program, refines it in the twin until it verifies, and the verified trajectory runs on the real robot.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2 id="twin">Building the digital twin</h2>
+    <p>From two or three calibrated RGBD cameras, CoEnv rebuilds the workcell in ManiSkill on top of SAPIEN. Object meshes are generated from a few reference images and paired with convex collision proxies. Grounded SAM&nbsp;2 segments the objects, GPT-5.6 Sol tells visually similar instances apart, and FoundationPose estimates a 6-DoF pose in each view; the poses are then averaged across views. Camera extrinsics are refined by rendering the twin and comparing it with the real capture until the reprojection error stops improving.</p>
+    <p>The twin does not need to be photorealistic. It needs to be resettable, queryable, and metrically aligned with the real cell, because the agent debugs against ground-truth state, and the images used for training always come from the real cameras.</p>
+  </div>
+
+  <figure class="wide">
+    <img src="images/fig2_pipeline.webp" width="2200" height="1229" loading="lazy" alt="The CoEnv framework: digital twin construction, agentic exploration in the twin, and collision-aware deployment.">
+    <figcaption><span class="fig-no">Figure 2.</span> The CoEnv framework. Digital twin construction (top left) turns multi-view RGBD into an executable simulation. In the twin (top right), a code agent generates, simulates, and refines a complete multi-arm program, and validated trajectories are stored as verified experience. Deployment (bottom) interpolates the trajectory and checks swept volumes before each action.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2 id="exploration">Exploring at the program level</h2>
+    <p>A VLM planner first splits the task into sub-goals and assigns each step to an arm. Claude Code then writes one program that drives all arms, runs it in the twin, reads the logs and checkpoint snapshots, and rewrites the program, for up to 10 rounds. Each round starts from a free reset, so the agent can afford real trial and error.</p>
+
+    <figure class="code">
+      <figcaption>The interface the code agent programs against (abridged).</figcaption>
+<pre><code><span class="c"># privileged state of the twin</span>
+robot.get_robot_state(robot_id)  -&gt; {position, orientation, euler_rpy, gripper}
+robot.get_object_state(name)     -&gt; {position, orientation}
+
+<span class="c"># primitives via robot.execute_action(a); agent_id: int or list (synchronized arms)</span>
+a = {<span class="s">"type"</span>: <span class="s">"MOVE"</span>,    <span class="s">"params"</span>: {delta_x, delta_y, delta_z, agent_id}}
+a = {<span class="s">"type"</span>: <span class="s">"ROTATE"</span>,  <span class="s">"params"</span>: {delta_yaw, delta_pitch, delta_roll, agent_id}}
+a = {<span class="s">"type"</span>: <span class="s">"GRASP"</span>,   <span class="s">"params"</span>: {target_width, agent_id}}
+a = {<span class="s">"type"</span>: <span class="s">"RELEASE"</span>, <span class="s">"params"</span>: {agent_id}}
+
+<span class="c"># grounded verification: snapshot state + multi-view renderings at a critical step</span>
+checkpoint(name, checkpoint_type, notes, suggested_views)</code></pre>
+    </figure>
+
+    <p>Three tools in the twin keep this loop grounded:</p>
+    <ul>
+      <li><strong>A verifier</strong> checks the outcome of every step against privileged simulator state.</li>
+      <li><strong>Checkpoints</strong> pause before risky steps, such as aligning a gripper before a grasp, and save the state and several rendered views for the agent to inspect.</li>
+      <li><strong>Adaptive camera control</strong> renders extra viewpoints when the arms block each other's view of the contact region.</li>
+    </ul>
+
+    <p>Working with whole programs changes what each round of reasoning leaves behind. An agent that picks one primitive at a time pays one model call per step, and its reasoning is gone when the episode ends. A program can be re-run from a new initial configuration with no further model calls, retrieved as an example when a related task comes up, and read by a person before it reaches the hardware.</p>
+
+    <h2 id="deployment">Deploying on the real robots</h2>
+    <p>A verified trajectory is densified by interpolating between the joint configurations recorded in the twin. Before each interpolated action runs, a forward-kinematics pass computes the swept volume of every arm, and the action is executed only if no two volumes intersect. Otherwise the system re-plans from the current state. No arm-arm collision occurred in the 100 trajectories we deployed.</p>
+
+    <h2 id="results">Results on five real tasks</h2>
+    <p>We test on five tasks in two workcells. Cube Stacking, Ball Pickup, and Transfer Cylinder use two Franka Research&nbsp;3 arms. Place Cucumber and Brush Box add an AgileX Piper dual-arm next to a Franka. Object poses change from trial to trial, and each method gets 10 real trials per task. Our baseline keeps the same twin, primitives, and tools but removes the code agent, so a VLM chooses every primitive step by step.</p>
+  </div>
+
+  <figure class="explorer" id="tasks" aria-label="Task explorer">
+    <div class="ex-tabs" role="tablist" aria-label="Task">
+      <span class="ex-group">Two arms</span>
+      <button type="button" role="tab" data-task="cube" aria-selected="true">Cube Stacking</button>
+      <button type="button" role="tab" data-task="ball" aria-selected="false" tabindex="-1">Ball Pickup</button>
+      <button type="button" role="tab" data-task="cylinder" aria-selected="false" tabindex="-1">Transfer Cylinder</button>
+      <span class="ex-break" aria-hidden="true"></span>
+      <span class="ex-group">Three arms</span>
+      <button type="button" role="tab" data-task="cucumber" aria-selected="false" tabindex="-1">Place Cucumber</button>
+      <button type="button" role="tab" data-task="brush" aria-selected="false" tabindex="-1">Brush Box</button>
+    </div>
+    <div class="ex-body" role="tabpanel" aria-live="polite">
+      <div class="ex-stage">
+        <div class="ex-views" role="group" aria-label="View">
+          <button type="button" data-view="run" aria-pressed="true">Real run</button>
+          <button type="button" data-view="twin" aria-pressed="false">Twin and real</button>
+          <button type="button" data-view="failure" aria-pressed="false">Failure case</button>
         </div>
-    </div>
-
-
-    <div class="container blog main first" id="blog-main" style="text-align: justify;">
-        <h1>Introduction</h1>
-        <p class='text'>
-            <a href="https://claude.ai/code" target="_blank"><b>Claude Code</b></a> has recently emerged as one of the most capable agentic coding tools, demonstrating strong abilities in autonomous reasoning and complex program synthesis. A natural question arises: <em>can such a code agent go beyond the digital world and drive coordination among physical robots?</em>
-        </p>
-    </div>
-    <div class="container blog large" style="padding-top: 0px; padding-bottom: 0px;">
-        <img src="images/code_robotic.png" alt="Claude Code meets Robotics" style="max-width: 100%; height: auto;">
-    </div>
-    <div class="container blog main" style="text-align: justify;">
-        <p class='text'>
-            In <b>CoEnv</b>, we explore this possibility. Beyond generating trajectory code, Claude Code <b>observes, thinks, and adapts</b> within simulation&mdash;adjusting camera viewpoints to see through occlusions, evaluating outcomes, and refining plans iteratively, just as a human would walk around a workspace for a better view. This closed-loop reasoning enables robust multi-arm coordination before any physical execution.
-        </p>
-        <p class='text'>
-            As embodied AI scales toward multi-agent scenarios, a key challenge emerges: how do we get multiple robots to collaborate safely in a shared workspace&mdash;avoiding collisions, reasoning about each other's actions, and staying coordinated over long horizons?
-        </p>
-        <p class='text'>
-            Our answer is <b>Compositional Environment</b>&mdash;inspired by how humans mentally rehearse before acting. CoEnv fuses a real-world workspace with its simulation twin into a unified decision-making space: robots think and plan in simulation, then act in the physical world. This simple idea turns out to be surprisingly effective for multi-agent coordination.
-        </p>
-    </div>
-    <div class="container blog large gray-linear">
-        <img src="images/motivation_v4.png" alt="Motivation" class="img-popup" onclick="openPopup(this.src)" style="max-width: 88%; margin: 0 auto; display: block;">
-        <p class="caption" style="text-align: justify;">
-            <b>Motivation of CoEnv.</b> Physical-world execution offers high fidelity but risks costly collisions, while the digital world enables cost-effective and safe testing. CoEnv composes both worlds through pose and action alignment, forming a <em>compositional environment</em> that supports real-to-sim reconstruction, simulation-conditioned action synthesis, and safe real-world deployment.
-        </p>
-    </div>
-
-    <style>
-    .img-popup {
-        cursor: zoom-in;
-        transition: 0.3s;
-        max-width: 100%;
-    }
-    .popup-overlay {
-        display: none;
-        position: fixed;
-        z-index: 9999;
-        left: 0;
-        top: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: rgba(0,0,0,0.8);
-        justify-content: center;
-        align-items: center;
-    }
-    .popup-overlay img {
-        max-width: 90vw;
-        max-height: 90vh;
-        width: auto;
-        height: auto;
-        object-fit: contain;
-        box-shadow: 0 0 20px white;
-        border-radius: 10px;
-    }
-    </style>
-
-    <!-- Popup overlay -->
-    <div id="popup" class="popup-overlay" onclick="closePopup()">
-        <img id="popup-img" src="" alt="Zoomed">
-    </div>
-
-    <script>
-    function openPopup(src) {
-        document.getElementById("popup-img").src = src;
-        document.getElementById("popup").style.display = "flex";
-    }
-    function closePopup() {
-        document.getElementById("popup").style.display = "none";
-    }
-    </script>
-
-
-    <div class="container blog main" id="blog-main" style="text-align: justify;">
-        <h1>Method</h1>
-        <p class='text'>
-            CoEnv operates through a three-stage pipeline that transforms real-world observations into coordinated multi-agent actions:
-        </p>
-        <ol>
-            <li>
-                <p class='text'>
-                    <b>Real-to-Sim Scene Reconstruction:</b> Multi-view RGBD observations are converted into a simulator-ready scene. We use Grounded SAM2 for object detection, FoundationPose for 6-DoF pose estimation with multi-view fusion, and ManiSkill (built on SAPIEN) as the simulation backend with iterative camera calibration refinement.
-                </p>
-            </li>
-            <li>
-                <p class='text'>
-                    <b>Simulation-Conditioned Action Synthesis:</b> A VLM-based planner decomposes task goals into hierarchical sub-goals and execution plans. Actions are synthesized in two complementary modes: <em>Interactive mode</em> uses closed-loop VLM feedback with adaptive camera control and checkpoint verification for real-time re-planning; <em>Iterative mode</em> leverages a code agent to generate complete multi-agent trajectories in a single program, refined through simulation feedback.
-                </p>
-            </li>
-            <li>
-                <p class='text'>
-                    <b>Sim-to-Real Transfer:</b> Validated trajectories are transferred to real robots via trajectory interpolation with collision volume verification, ensuring collision-free multi-agent execution.
-                </p>
-            </li>
-        </ol>
-    </div>
-    <div class="container blog large gray-linear">
-        <img src="images/pipeline_v7.png" alt="Pipeline" class="img-popup" onclick="openPopup(this.src)">
-        <p class="caption" style="text-align: justify;">
-            <b>Overview of CoEnv.</b> The framework consists of three stages: (1) Real-to-Sim Scene Reconstruction using 3D asset generation, multi-view localization, and iterative camera calibration; (2) Simulation-Conditioned Action Synthesis with hierarchical task planning and two complementary execution modes (interactive and iterative); (3) Sim-to-Real Transfer with trajectory interpolation and collision volume verification.
-        </p>
-    </div>
-
-
-    <div class="container blog main" style="text-align: justify;">
-        <h1>Tasks</h1>
-        <p class="text">
-            We evaluate CoEnv on five challenging multi-arm manipulation tasks with increasing coordination complexity, using two-agent (Franka Research 3 &times; 2) and three-agent (Franka Research 3 + AgileX Piper dual-arm) configurations.
-        </p>
-    </div>
-    <div class="container blog large gray-linear">
-        <img src="images/tasks.png" alt="Tasks" class="img-popup" onclick="openPopup(this.src)">
-        <p class="caption" style="text-align: justify;">
-            <b>Task demonstrations.</b> Five multi-agent manipulation tasks with keyframes from successful real-world executions. Two-agent tasks: Cube Stacking, Ball Pickup, and Transfer Cylinder. Three-agent tasks: Place Cucumber and Brush Box.
-        </p>
-    </div>
-
-
-    <div class="container blog main">
-        <h1>Results</h1>
-        <p class="text" style="text-align: justify;">
-            CoEnv achieves an <b>overall 49% success rate</b> across five challenging multi-agent manipulation tasks. The two execution modes exhibit complementary strengths: iterative mode excels at tasks requiring precise trajectory control (e.g., Cube Stacking: 9/10), while interactive mode dominates in complex multi-stage coordination (e.g., Brush Box: 7/10).
-        </p>
-    </div>
-    <div class="container blog large" style="text-align: center;">
-        <video style="max-width: 60%; border-radius: 8px;" controls muted loop playsinline>
-            <source src="videos/demo.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        <p class="caption">Autonomous multi-agent manipulation demo (4&times; speed).</p>
-    </div>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-        }
-        thead {
-            background-color: #fffbef;
-        }
-        .note-row td {
-            text-align: center;
-            background-color: #ffffff;
-            border: none;
-        }
-    </style>
-    <div class="container blog extra-large">
-        <table>
-            <thead class="center">
-                <tr class="note-row">
-                    <td colspan="5">
-                        <b>S<sub>i</sub></b>: Subtask success rate (x/10). &nbsp;&nbsp;&nbsp;
-                        <b>SR</b>: Task success rate (x/10). &nbsp;&nbsp;&nbsp;
-                        <b>Overall</b>: Average across both modes.
-                    </td>
-                </tr>
-                <tr>
-                    <th>Task</th>
-                    <th>Mode</th>
-                    <th>Subtask Milestones</th>
-                    <th>SR (x/10)</th>
-                    <th>Overall (%)</th>
-                </tr>
-            </thead>
-            <tbody class="center">
-                <!-- Cube Stacking -->
-                <tr class="two-agent">
-                    <td rowspan="2"><b>Cube Stacking</b></td>
-                    <td>Interactive</td>
-                    <td>S1: 7/10, S2: 6/10</td>
-                    <td>6/10</td>
-                    <td rowspan="2"><b>75%</b></td>
-                </tr>
-                <tr class="two-agent">
-                    <td>Iterative</td>
-                    <td>S1: 10/10, S2: 9/10</td>
-                    <td>9/10</td>
-                </tr>
-                <!-- Ball Pickup -->
-                <tr class="two-agent">
-                    <td rowspan="2"><b>Ball Pickup</b></td>
-                    <td>Interactive</td>
-                    <td>S1: 9/10, S2: 4/10</td>
-                    <td>4/10</td>
-                    <td rowspan="2"><b>50%</b></td>
-                </tr>
-                <tr class="two-agent">
-                    <td>Iterative</td>
-                    <td>S1: 6/10, S2: 6/10</td>
-                    <td>6/10</td>
-                </tr>
-                <!-- Transfer Cylinder -->
-                <tr class="two-agent">
-                    <td rowspan="2"><b>Transfer Cylinder</b></td>
-                    <td>Interactive</td>
-                    <td>S1: 9/10, S2: 4/10, S3: 4/10</td>
-                    <td>4/10</td>
-                    <td rowspan="2"><b>25%</b></td>
-                </tr>
-                <tr class="two-agent">
-                    <td>Iterative</td>
-                    <td>S1: 6/10, S2: 2/10, S3: 1/10</td>
-                    <td>1/10</td>
-                </tr>
-                <!-- Place Cucumber -->
-                <tr class="three-agent">
-                    <td rowspan="2"><b>Place Cucumber</b></td>
-                    <td>Interactive</td>
-                    <td>S1: 9/10, S2: 7/10, S3: 4/10</td>
-                    <td>4/10</td>
-                    <td rowspan="2"><b>35%</b></td>
-                </tr>
-                <tr class="three-agent">
-                    <td>Iterative</td>
-                    <td>S1: 8/10, S2: 8/10, S3: 3/10</td>
-                    <td>3/10</td>
-                </tr>
-                <!-- Brush Box -->
-                <tr class="three-agent">
-                    <td rowspan="2"><b>Brush Box</b></td>
-                    <td>Interactive</td>
-                    <td>S1: 10/10, S2: 9/10, S3: 7/10</td>
-                    <td>7/10</td>
-                    <td rowspan="2"><b>60%</b></td>
-                </tr>
-                <tr class="three-agent">
-                    <td>Iterative</td>
-                    <td>S1: 8/10, S2: 8/10, S3: 5/10</td>
-                    <td>5/10</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-
-    <div class="container blog large gray-linear">
-        <img src="images/sim_real.png" alt="Sim-to-Real" class="img-popup" onclick="openPopup(this.src)">
-        <p class="caption" style="text-align: justify;">
-            <b>Simulation vs. Real-world execution.</b> Side-by-side comparison demonstrating high visual correspondence between simulated planning and real-world execution across multiple tasks, validating the effectiveness of CoEnv's compositional environment approach.
-        </p>
-    </div>
-
-
-    <div class="container blog main">
-        <h1>Ablation Study</h1>
-        <p class="text" style="text-align: justify;">
-            We ablate two key mechanisms in CoEnv's interactive mode: <b>Adaptive Camera Control</b> and <b>Checkpoint Verification</b>. Both are indispensable&mdash;removing adaptive camera reduces average success by 40%, while removing checkpoints causes a 60% drop due to cascading error propagation.
-        </p>
-    </div>
-    <div class="container blog large">
-        <table>
-            <thead class="center">
-                <tr>
-                    <th>Variant</th>
-                    <th>Cube Stacking</th>
-                    <th>Ball Pickup</th>
-                    <th>Transfer Cyl.</th>
-                    <th>Place Cuc.</th>
-                    <th>Brush Box</th>
-                    <th>Average</th>
-                </tr>
-            </thead>
-            <tbody class="center">
-                <tr class="ablation">
-                    <td><b>Full CoEnv</b></td>
-                    <td>6/10</td><td>4/10</td><td>4/10</td><td>4/10</td><td>7/10</td><td><b>50%</b></td>
-                </tr>
-                <tr class="ablation">
-                    <td>w/o Adaptive Camera</td>
-                    <td>5/10</td><td>6/10</td><td>0/10</td><td>4/10</td><td>0/10</td><td>30%</td>
-                </tr>
-                <tr class="ablation">
-                    <td>w/o Checkpoint Verification</td>
-                    <td>4/10</td><td>2/10</td><td>0/10</td><td>4/10</td><td>0/10</td><td>20%</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-
-    <div class="container blog main" style="text-align: justify;">
-        <h1>Scalable Data Collection</h1>
-        <p class="text">
-            Beyond task execution, CoEnv reveals a practical pathway toward <b>scalable multi-agent data generation</b>. The iterative mode produces substantially more episodes per session (up to 11.7&times; better throughput), as the code agent generates complete trajectories in a single program with lower per-episode token cost. Environment resets account for only ~10&ndash;32% of total token consumption, indicating the vast majority of the budget is devoted to productive reasoning.
-        </p>
-    </div>
-    <div class="container blog large">
-        <table>
-            <thead class="center">
-                <tr>
-                    <th>Task</th>
-                    <th>Interactive</th>
-                    <th>Iterative</th>
-                    <th>Reset (%)</th>
-                </tr>
-            </thead>
-            <tbody class="center">
-                <tr class="two-agent">
-                    <td><b>Cube Stacking</b></td>
-                    <td>1.5</td>
-                    <td><b>17.5</b></td>
-                    <td>31.57</td>
-                </tr>
-                <tr class="three-agent">
-                    <td><b>Brush Box</b></td>
-                    <td>2.5</td>
-                    <td><b>9.5</b></td>
-                    <td>10.54</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="container blog large gray-linear">
-        <img src="images/train_v2.png" alt="Data Collection" class="img-popup" onclick="openPopup(this.src)" style="max-width: 85%; margin: 0 auto; display: block;">
-        <p class="caption" style="text-align: justify;">
-            <b>Scalable data collection pipeline.</b> CoEnv first synthesizes and validates manipulation strategies in simulation, then transfers them to real robots for physical execution, collecting real-world multi-agent trajectory data that can be used to train generalist policies, providing an alternative to manual teleoperation.
-        </p>
-    </div>
-
-
-    <div class="container blog main">
-        <h1>Citation</h1>
-        <p class="text">
-            If you find this project useful, welcome to cite us.
-        </p>
-<pre><code class="plaintext">@article{kang2026coenv,
-    title={CoEnv: Driving Embodied Multi-Agent Collaboration via Compositional Environment},
-    author={Li Kang and Yutao Fan and Rui Li and Heng Zhou and Yiran Qin and Zhemeng Zhang and Songtao Huang and Xiufeng Song and Zaibin Zhang and Bruno N.Y. Chen and Zhenfei Yin and Dongzhan Zhou and Wangmeng Zuo and Lei Bai},
-    journal={arXiv preprint arXiv:2604.05484},
-    year={2026}
-}</code></pre>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>
-                This website is built on the <a href="https://shikun.io/projects/clarity">Clarity Template</a>, designed by <a href="https://shikun.io/">Shikun Liu</a>.
-            </p>
+        <div class="ex-frame">
+          <img class="ex-main" src="images/tasks/cube_1.webp" width="1600" height="903" alt="Cube Stacking, keyframe 1">
+          <span class="ex-tag" hidden></span>
         </div>
-    </footer>
+        <div class="ex-strip"></div>
+        <p class="ex-note"></p>
+      </div>
+      <div class="ex-info">
+        <h3 class="ex-name">Cube Stacking</h3>
+        <p class="ex-setup"></p>
+        <p class="ex-desc"></p>
+        <div class="ex-legend"><span class="k ours">CoEx</span><span class="k base">Without code agent</span></div>
+        <div class="ex-chart"></div>
+      </div>
+    </div>
+    <noscript><img src="images/fig_tasks.webp" width="2200" height="1481" alt="Keyframes from successful real-world runs of the five tasks."></noscript>
+    <figcaption><span class="fig-no">Figure 3.</span> The five tasks. Pick a task to see keyframes from a successful real run, the planned rollout in the twin and the real execution, and a representative failure. The bars give the success count at each subtask milestone over 10 real trials; the last milestone is task success.</figcaption>
+  </figure>
+
+  <figure class="table">
+    <figcaption><span class="fig-no">Table 1.</span> Real-world results, 10 trials per task. S<sub>i</sub> is the i-th subtask milestone and SR is task success.</figcaption>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr class="group">
+            <th></th>
+            <th colspan="4" class="ours">CoEx (ours)</th>
+            <th colspan="4">Without code agent</th>
+          </tr>
+          <tr>
+            <th class="task">Task</th>
+            <th class="ours">S<sub>1</sub></th><th class="ours">S<sub>2</sub></th><th class="ours">S<sub>3</sub></th><th class="ours">SR</th>
+            <th>S<sub>1</sub></th><th>S<sub>2</sub></th><th>S<sub>3</sub></th><th>SR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="section"><td colspan="9">Two arms (Franka &times; 2)</td></tr>
+          <tr><td class="task">Cube Stacking</td><td class="ours">10/10</td><td class="ours">9/10</td><td class="ours">&ndash;</td><td class="ours best">9/10</td><td>7/10</td><td>6/10</td><td>&ndash;</td><td>6/10</td></tr>
+          <tr><td class="task">Ball Pickup</td><td class="ours">6/10</td><td class="ours">6/10</td><td class="ours">&ndash;</td><td class="ours best">6/10</td><td>9/10</td><td>4/10</td><td>&ndash;</td><td>4/10</td></tr>
+          <tr><td class="task">Transfer Cylinder</td><td class="ours">8/10</td><td class="ours">6/10</td><td class="ours">6/10</td><td class="ours best">6/10</td><td>9/10</td><td>4/10</td><td>4/10</td><td>4/10</td></tr>
+          <tr class="section"><td colspan="9">Three arms (Franka + AgileX Piper &times; 2)</td></tr>
+          <tr><td class="task">Place Cucumber</td><td class="ours">8/10</td><td class="ours">8/10</td><td class="ours">6/10</td><td class="ours best">6/10</td><td>9/10</td><td>7/10</td><td>4/10</td><td>4/10</td></tr>
+          <tr><td class="task">Brush Box</td><td class="ours">8/10</td><td class="ours">8/10</td><td class="ours">8/10</td><td class="ours best">8/10</td><td>10/10</td><td>9/10</td><td>7/10</td><td>7/10</td></tr>
+          <tr class="avg"><td class="task">Average</td><td class="ours">80%</td><td class="ours">74%</td><td class="ours">67%</td><td class="ours best">70%</td><td>88%</td><td>60%</td><td>50%</td><td>50%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </figure>
+
+  <div class="prose">
+    <p>CoEx reaches 70% average success, against 50% without the code agent, and is ahead on all five tasks. With 10 trials per cell, the per-task gaps are best read as trends. The more useful pattern is where each system loses trials. The step-wise baseline clears the first milestone more often (88% vs. 80%) but loses trials at every later stage: it completes 25 of the 44 trials that pass the first milestone. CoEx completes 35 of 40. Ten of its 15 failures happen before the first milestone, and on Ball Pickup all four failures occur at the initial bimanual contact. A program verified end to end tends to either fail at the first grasp or finish the task, while step-by-step decisions let small errors add up over the horizon.</p>
+  </div>
+
+  <div class="prose">
+    <p>On three representative tasks we also compare with two earlier VLM-planning frameworks. CoEx averages 77%, against 57% without the code agent, 40% for SimPACT, and 20% for Code-as-Monitor. The gap is largest on the Transfer Cylinder handover, where the two earlier frameworks succeed 1 and 0 times out of 10 and CoEx succeeds 6 times. Code-as-Monitor detects a failure only after it has happened on the hardware, and SimPACT commits to the first plan its simulator accepts. CoEx runs into the same failures inside the twin, where retrying costs nothing.</p>
+    <p>Both twin-side tools matter. Removing adaptive camera control from the baseline drops its average success from 50% to 30%, mostly on tasks where the arms occlude the contact region. Removing checkpoints drops it to 20%, because early errors are no longer caught before they compound.</p>
+  </div>
+
+  <figure class="wide">
+    <img src="images/fig_results.webp" width="2200" height="780" loading="lazy" alt="Bar charts: (a) comparison with prior frameworks, (b) tool ablation.">
+    <figcaption><span class="fig-no">Figure 4.</span> Real-world success rates, 10 trials per task. (a) CoEx and the baseline without the code agent against Code-as-Monitor and SimPACT. (b) Removing either twin-side tool from the baseline.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2 id="reuse">Reusing verified rollouts</h2>
+    <p>A verified program can be re-run from new initial configurations without further reasoning. In one agent session, CoEx yields 17.5 verified episodes on Cube Stacking and 9.5 on Brush Box, 11.7&times; and 3.8&times; the step-wise baseline.</p>
+    <p>To check whether these rollouts are useful as training data, we record them on the real robot and fine-tune a &pi;<sub>0.5</sub> policy. With 200 rollouts the policy succeeds 10/10 times on Cube Stacking and 7/10 on Brush Box, compared with 4/10 and 2/10 from 20 teleoperated demonstrations. Pairing those demonstrations with 200 rollouts of the same program recorded in the twin instead gives 3/10 and 0/10. The program transfers because it is written in terms of object poses. The rendered images do not, since they differ from the real cameras in texture, lighting, and sensor noise.</p>
+  </div>
+
+  <figure class="table">
+    <figcaption><span class="fig-no">Table 2.</span> Left: verified episodes per agent session. Right: real-robot success of a fine-tuned &pi;<sub>0.5</sub> policy (10 trials) by training data.</figcaption>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr class="group">
+            <th></th>
+            <th colspan="2">Episodes / session</th>
+            <th colspan="4" class="ours">&pi;<sub>0.5</sub> success by training data</th>
+          </tr>
+          <tr>
+            <th class="task">Task</th>
+            <th>w/o code agent</th><th>CoEx</th>
+            <th class="ours">20 teleop.</th><th class="ours">200 in twin + 20 teleop.</th><th class="ours">50 CoEx</th><th class="ours">200 CoEx</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="task">Cube Stacking</td><td>1.5</td><td class="best">17.5</td><td class="ours">4/10</td><td class="ours">3/10</td><td class="ours">8/10</td><td class="ours best">10/10</td></tr>
+          <tr><td class="task">Brush Box</td><td>2.5</td><td class="best">9.5</td><td class="ours">2/10</td><td class="ours">0/10</td><td class="ours">4/10</td><td class="ours best">7/10</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </figure>
+
+  <figure class="wide">
+    <img src="images/fig_collection.webp" width="2200" height="442" loading="lazy" alt="Closed-loop data collection: the agent solves the task, the scene is reset, and the same program is re-issued; recorded rollouts train a policy.">
+    <figcaption><span class="fig-no">Figure 5.</span> Closed-loop data collection. After the agent solves the task once, the same frozen agent re-issues the verified program from each new configuration. Scene resets were done by hand in this study. The recorded rollouts fine-tune a visuomotor policy.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2 id="limitations">Limitations</h2>
+    <p>The twin covers rigid objects with pre-generated assets, fixed robot bases, and static scenes, and a single centralized planner controls all arms, so we make no claim about decentralized autonomy or about more than three arms. Real execution replays the trajectory open loop, which leaves residual pose offsets at grasp or placement as a main source of failure (see the failure cases in Figure 3). The evaluation uses 10 trials per task, and CoEx and its ablation differ in backbone model (Claude Code and GPT-5.6 Sol) as well as in loop structure.</p>
+  </div>
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-    <script src="clarity/clarity.js"></script>
-    <script src="assets/scripts/main.js"></script>
-    </html>
+  <div class="prose">
+    <h2 id="citation">Citation</h2>
+    <div class="bib">
+      <button type="button" class="copy" data-target="bibtex">Copy</button>
+<pre id="bibtex">@article{kang2026coenv,
+  title   = {CoEnv: Code-Driven Exploration in Real-to-Sim Digital Twins
+             for Multi-Arm Manipulation},
+  author  = {Kang, Li and Fan, Yutao and Li, Rui and Zhou, Heng and
+             Qin, Yiran and Zhang, Zhemeng and Huang, Songtao and
+             Song, Xiufeng and Zhang, Zaibin and Chen, Bruno N.Y. and
+             Yin, Zhenfei and Zhou, Dongzhan and Zuo, Wangmeng and Bai, Lei},
+  journal = {arXiv preprint arXiv:2604.05484},
+  year    = {2026}
+}</pre>
+    </div>
+  </div>
+
+</article>
+</main>
+
+<footer class="site-foot">
+  <div class="site-inner">
+    <span>Last updated <time datetime="2026-11-02">November 2, 2026</time></span>
+    <a href="https://arxiv.org/abs/2604.05484">arXiv:2604.05484</a>
+  </div>
+</footer>
+
+<dialog id="zoom" aria-label="Enlarged figure">
+  <img alt="">
+</dialog>
+
+<script src="assets/site.js" defer></script>
 </body>
+</html>
