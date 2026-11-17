@@ -1,0 +1,101 @@
+WEBVTT
+
+1
+00:00:00.400 --> 00:00:02.491
+Three robot arms share one table.
+
+2
+00:00:02.850 --> 00:00:04.913
+Practicing here is slow to reset,
+
+3
+00:00:04.913 --> 00:00:08.226
+and with several arms in one workspace, it is unsafe.
+
+4
+00:00:08.800 --> 00:00:12.041
+CoEnv rebuilds the workcell as a physics twin,
+
+5
+00:00:12.041 --> 00:00:14.155
+from calibrated depth cameras.
+
+6
+00:00:14.360 --> 00:00:18.931
+Inside the twin, a coding agent writes one program for all three arms,
+
+7
+00:00:18.931 --> 00:00:19.715
+and runs it.
+
+8
+00:00:19.920 --> 00:00:21.025
+Before risky steps,
+
+9
+00:00:21.025 --> 00:00:24.166
+checkpoints save the state and several rendered views,
+
+10
+00:00:24.166 --> 00:00:27.365
+and a verifier checks every step against the simulator.
+
+11
+00:00:27.600 --> 00:00:30.313
+Then the agent rewrites and reruns the program,
+
+12
+00:00:30.313 --> 00:00:31.525
+for up to ten rounds.
+
+13
+00:00:32.400 --> 00:00:35.238
+Only verified programs reach the real robots,
+
+14
+00:00:35.238 --> 00:00:36.752
+after a collision check.
+
+15
+00:00:37.100 --> 00:00:40.940
+Across one hundred deployed trajectories, no two arms collided.
+
+16
+00:00:41.750 --> 00:00:43.692
+On five real multi-arm tasks,
+
+17
+00:00:43.692 --> 00:00:47.510
+the coding agent reaches seventy percent average success,
+
+18
+00:00:47.750 --> 00:00:51.547
+against fifty percent when a vision-language model picks every step.
+
+19
+00:00:52.200 --> 00:00:54.440
+Against two prior planning frameworks,
+
+20
+00:00:54.440 --> 00:00:58.095
+the coding agent reaches seventy-seven percent on three tasks,
+
+21
+00:00:58.095 --> 00:00:59.923
+compared with twenty and forty.
+
+22
+00:01:00.450 --> 00:01:03.683
+CoEnv can also collect real multi-arm data,
+
+23
+00:01:03.683 --> 00:01:08.194
+by re-running verified programs from new starting positions.
+
+24
+00:01:08.750 --> 00:01:10.891
+Trained only on this data,
+
+25
+00:01:10.891 --> 00:01:16.409
+a π0.5 policy outperforms one trained on twenty teleoperated demos.

@@ -1,4 +1,4 @@
-// CoEnv project page: task explorer, figure zoom, hero video playback, BibTeX copy.
+// CoEnv project page: task explorer, figure zoom, BibTeX copy.
 (function () {
   // ---------- figure zoom ----------
   var zoom = document.getElementById("zoom");
@@ -228,36 +228,6 @@
     });
 
     selectTask("cube");
-  }
-
-  // ---------- hero video ----------
-  // Plays only while on screen; click toggles; no autoplay for reduced motion.
-  var video = document.getElementById("demo");
-  if (video) {
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var userPaused = false;
-    if (reduce) {
-      video.removeAttribute("autoplay");
-      video.pause();
-      video.controls = true;
-    } else {
-      video.addEventListener("click", function () {
-        if (video.paused) { userPaused = false; video.play(); }
-        else { userPaused = true; video.pause(); }
-      });
-      if ("IntersectionObserver" in window) {
-        new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting && !userPaused) {
-              var p = video.play();
-              if (p && p.catch) p.catch(function () {});
-            } else if (!e.isIntersecting) {
-              video.pause();
-            }
-          });
-        }, { threshold: 0.25 }).observe(video);
-      }
-    }
   }
 
   // ---------- copy BibTeX ----------

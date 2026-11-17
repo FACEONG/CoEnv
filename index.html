@@ -86,8 +86,11 @@
   </header>
 
   <figure class="hero">
-    <video id="demo" src="videos/three_arm_tasks.mp4" poster="images/three_arm_poster.webp" muted loop playsinline autoplay preload="metadata" aria-label="Real-robot runs of Place Cucumber and Brush Box"></video>
-    <figcaption>Autonomous real-robot runs of the two three-arm tasks, Place Cucumber and Brush Box, planned and verified in the digital twin before execution. A Franka works next to an AgileX Piper dual-arm. Shown at 4&times; speed.</figcaption>
+    <video id="overview" controls playsinline preload="metadata" poster="images/coenv_overview_poster.jpg" aria-label="Narrated overview of CoEnv">
+      <source src="videos/coenv_overview.mp4" type="video/mp4">
+      <track kind="captions" src="videos/coenv_overview.vtt" srclang="en" label="English" default>
+    </video>
+    <figcaption><span class="fig-no">Overview.</span> A narrated tour (1:20): the real workcell and its digital twin, the coding agent's write, run and verify loop, the real-robot results, and collecting multi-arm data with CoEnv. The narration is a synthetic voice (Kokoro). Music: &ldquo;The Corporate Upbeat&rdquo; by Soundrider/Dope, <a href="https://www.jamendo.com/track/1670594">Jamendo</a>, <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>.</figcaption>
   </figure>
 
   <div class="prose">
@@ -102,7 +105,7 @@
 
   <figure class="wide">
     <img src="images/fig1_paradigms.webp" width="2200" height="730" loading="lazy" alt="Left: the real workcell and its digital twin. Right: three ways to use the twin, (a) real-sim co-training, (b) sim RL, (c) code-driven exploration.">
-    <figcaption><span class="fig-no">Figure 1.</span> Three ways to use a digital twin. Co-training (a) mixes simulated trajectories with a few real ones, and sim RL (b) trains a policy against simulated rollouts and a reward. Both put the simulator upstream of the data. Code-driven exploration (c) puts it upstream of the program: given only a task description, the code agent writes a multi-arm program, refines it in the twin until it verifies, and the verified trajectory runs on the real robot.</figcaption>
+    <figcaption><span class="fig-no">Figure 1.</span> Three ways to use a digital twin. Co-training (a) mixes simulated trajectories with a few real ones, and sim RL (b) trains a policy against simulated rollouts and a reward. Both put the simulator upstream of the data. Code-driven exploration (c) puts it upstream of the program: given only a task description, the coding agent writes a multi-arm program, refines it in the twin until it verifies, and the verified trajectory runs on the real robot.</figcaption>
   </figure>
 
   <div class="prose">
@@ -113,7 +116,7 @@
 
   <figure class="wide">
     <img src="images/fig2_pipeline.webp" width="2200" height="1229" loading="lazy" alt="The CoEnv framework: digital twin construction, agentic exploration in the twin, and collision-aware deployment.">
-    <figcaption><span class="fig-no">Figure 2.</span> The CoEnv framework. Digital twin construction (top left) turns multi-view RGBD into an executable simulation. In the twin (top right), a code agent generates, simulates, and refines a complete multi-arm program, and validated trajectories are stored as verified experience. Deployment (bottom) interpolates the trajectory and checks swept volumes before each action.</figcaption>
+    <figcaption><span class="fig-no">Figure 2.</span> The CoEnv framework. Digital twin construction (top left) turns multi-view RGBD into an executable simulation. In the twin (top right), a coding agent generates, simulates, and refines a complete multi-arm program, and validated trajectories are stored as verified experience. Deployment (bottom) interpolates the trajectory and checks swept volumes before each action.</figcaption>
   </figure>
 
   <div class="prose">
@@ -121,7 +124,7 @@
     <p>A VLM planner first splits the task into sub-goals and assigns each step to an arm. Claude Code then writes one program that drives all arms, runs it in the twin, reads the logs and checkpoint snapshots, and rewrites the program, for up to 10 rounds. Each round starts from a free reset, so the agent can afford real trial and error.</p>
 
     <figure class="code">
-      <figcaption>The interface the code agent programs against (abridged).</figcaption>
+      <figcaption>The interface the coding agent programs against (abridged).</figcaption>
 <pre><code><span class="c"># privileged state of the twin</span>
 robot.get_robot_state(robot_id)  -&gt; {position, orientation, euler_rpy, gripper}
 robot.get_object_state(name)     -&gt; {position, orientation}
@@ -149,7 +152,7 @@ checkpoint(name, checkpoint_type, notes, suggested_views)</code></pre>
     <p>A verified trajectory is densified by interpolating between the joint configurations recorded in the twin. Before each interpolated action runs, a forward-kinematics pass computes the swept volume of every arm, and the action is executed only if no two volumes intersect. Otherwise the system re-plans from the current state. No arm-arm collision occurred in the 100 trajectories we deployed.</p>
 
     <h2 id="results">Results on five real tasks</h2>
-    <p>We test on five tasks in two workcells. Cube Stacking, Ball Pickup, and Transfer Cylinder use two Franka Research&nbsp;3 arms. Place Cucumber and Brush Box add an AgileX Piper dual-arm next to a Franka. Object poses change from trial to trial, and each method gets 10 real trials per task. Our baseline keeps the same twin, primitives, and tools but removes the code agent, so a VLM chooses every primitive step by step.</p>
+    <p>We test on five tasks in two workcells. Cube Stacking, Ball Pickup, and Transfer Cylinder use two Franka Research&nbsp;3 arms. Place Cucumber and Brush Box add an AgileX Piper dual-arm next to a Franka. Object poses change from trial to trial, and each method gets 10 real trials per task. Our baseline keeps the same twin, primitives, and tools but removes the coding agent, so a VLM chooses every primitive step by step.</p>
   </div>
 
   <figure class="explorer" id="tasks" aria-label="Task explorer">
@@ -181,7 +184,7 @@ checkpoint(name, checkpoint_type, notes, suggested_views)</code></pre>
         <h3 class="ex-name">Cube Stacking</h3>
         <p class="ex-setup"></p>
         <p class="ex-desc"></p>
-        <div class="ex-legend"><span class="k ours">CoEx</span><span class="k base">Without code agent</span></div>
+        <div class="ex-legend"><span class="k ours">CoEx</span><span class="k base">Without coding agent</span></div>
         <div class="ex-chart"></div>
       </div>
     </div>
@@ -197,7 +200,7 @@ checkpoint(name, checkpoint_type, notes, suggested_views)</code></pre>
           <tr class="group">
             <th></th>
             <th colspan="4" class="ours">CoEx (ours)</th>
-            <th colspan="4">Without code agent</th>
+            <th colspan="4">Without coding agent</th>
           </tr>
           <tr>
             <th class="task">Task</th>
@@ -220,17 +223,17 @@ checkpoint(name, checkpoint_type, notes, suggested_views)</code></pre>
   </figure>
 
   <div class="prose">
-    <p>CoEx reaches 70% average success, against 50% without the code agent, and is ahead on all five tasks. With 10 trials per cell, the per-task gaps are best read as trends. The more useful pattern is where each system loses trials. The step-wise baseline clears the first milestone more often (88% vs. 80%) but loses trials at every later stage: it completes 25 of the 44 trials that pass the first milestone. CoEx completes 35 of 40. Ten of its 15 failures happen before the first milestone, and on Ball Pickup all four failures occur at the initial bimanual contact. A program verified end to end tends to either fail at the first grasp or finish the task, while step-by-step decisions let small errors add up over the horizon.</p>
+    <p>CoEx reaches 70% average success, against 50% without the coding agent, and is ahead on all five tasks. With 10 trials per cell, the per-task gaps are best read as trends. The more useful pattern is where each system loses trials. The step-wise baseline clears the first milestone more often (88% vs. 80%) but loses trials at every later stage: it completes 25 of the 44 trials that pass the first milestone. CoEx completes 35 of 40. Ten of its 15 failures happen before the first milestone, and on Ball Pickup all four failures occur at the initial bimanual contact. A program verified end to end tends to either fail at the first grasp or finish the task, while step-by-step decisions let small errors add up over the horizon.</p>
   </div>
 
   <div class="prose">
-    <p>On three representative tasks we also compare with two earlier VLM-planning frameworks. CoEx averages 77%, against 57% without the code agent, 40% for SimPACT, and 20% for Code-as-Monitor. The gap is largest on the Transfer Cylinder handover, where the two earlier frameworks succeed 1 and 0 times out of 10 and CoEx succeeds 6 times. Code-as-Monitor detects a failure only after it has happened on the hardware, and SimPACT commits to the first plan its simulator accepts. CoEx runs into the same failures inside the twin, where retrying costs nothing.</p>
+    <p>On three representative tasks we also compare with two earlier VLM-planning frameworks. CoEx averages 77%, against 57% without the coding agent, 40% for SimPACT, and 20% for Code-as-Monitor. The gap is largest on the Transfer Cylinder handover, where the two earlier frameworks succeed 1 and 0 times out of 10 and CoEx succeeds 6 times. Code-as-Monitor detects a failure only after it has happened on the hardware, and SimPACT commits to the first plan its simulator accepts. CoEx runs into the same failures inside the twin, where retrying costs nothing.</p>
     <p>Both twin-side tools matter. Removing adaptive camera control from the baseline drops its average success from 50% to 30%, mostly on tasks where the arms occlude the contact region. Removing checkpoints drops it to 20%, because early errors are no longer caught before they compound.</p>
   </div>
 
   <figure class="wide">
     <img src="images/fig_results.webp" width="2200" height="780" loading="lazy" alt="Bar charts: (a) comparison with prior frameworks, (b) tool ablation.">
-    <figcaption><span class="fig-no">Figure 4.</span> Real-world success rates, 10 trials per task. (a) CoEx and the baseline without the code agent against Code-as-Monitor and SimPACT. (b) Removing either twin-side tool from the baseline.</figcaption>
+    <figcaption><span class="fig-no">Figure 4.</span> Real-world success rates, 10 trials per task. (a) CoEx and the baseline without the coding agent against Code-as-Monitor and SimPACT. (b) Removing either twin-side tool from the baseline.</figcaption>
   </figure>
 
   <div class="prose">
@@ -251,7 +254,7 @@ checkpoint(name, checkpoint_type, notes, suggested_views)</code></pre>
           </tr>
           <tr>
             <th class="task">Task</th>
-            <th>w/o code agent</th><th>CoEx</th>
+            <th>w/o coding agent</th><th>CoEx</th>
             <th class="ours">20 teleop.</th><th class="ours">200 in twin + 20 teleop.</th><th class="ours">50 CoEx</th><th class="ours">200 CoEx</th>
           </tr>
         </thead>
