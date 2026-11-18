@@ -121,7 +121,7 @@
 
   <div class="prose">
     <h2 id="exploration">Exploring at the program level</h2>
-    <p>A VLM planner first splits the task into sub-goals and assigns each step to an arm. Claude Code then writes one program that drives all arms, runs it in the twin, reads the logs and checkpoint snapshots, and rewrites the program, for up to 10 rounds. Each round starts from a free reset, so the agent can afford real trial and error.</p>
+    <p>A VLM planner first splits the task into sub-goals and assigns each step to an arm. Claude Code then writes one program that drives all arms, runs it in the twin, reads the logs and checkpoint snapshots, and rewrites the program, for up to 3 rounds in total. Each round starts from a free reset, so the agent can afford real trial and error.</p>
 
     <figure class="code">
       <figcaption>The interface the coding agent programs against (abridged).</figcaption>
@@ -149,7 +149,7 @@ checkpoint(name, checkpoint_type, notes, suggested_views)</code></pre>
     <p>Working with whole programs changes what each round of reasoning leaves behind. An agent that picks one primitive at a time pays one model call per step, and its reasoning is gone when the episode ends. A program can be re-run from a new initial configuration with no further model calls, retrieved as an example when a related task comes up, and read by a person before it reaches the hardware.</p>
 
     <h2 id="deployment">Deploying on the real robots</h2>
-    <p>A verified trajectory is densified by interpolating between the joint configurations recorded in the twin. Before each interpolated action runs, a forward-kinematics pass computes the swept volume of every arm, and the action is executed only if no two volumes intersect. Otherwise the system re-plans from the current state. No arm-arm collision occurred in the 100 trajectories we deployed.</p>
+    <p>A verified trajectory is densified by interpolating between the joint configurations recorded in the twin. Before each interpolated action runs, a forward-kinematics pass computes the swept volume of every arm, and the action is executed only if no two volumes intersect. Otherwise the system re-plans from the current state.</p>
 
     <h2 id="results">Results on five real tasks</h2>
     <p>We test on five tasks in two workcells. Cube Stacking, Ball Pickup, and Transfer Cylinder use two Franka Research&nbsp;3 arms. Place Cucumber and Brush Box add an AgileX Piper dual-arm next to a Franka. Object poses change from trial to trial, and each method gets 10 real trials per task. Our baseline keeps the same twin, primitives, and tools but removes the coding agent, so a VLM chooses every primitive step by step.</p>
